@@ -1,0 +1,5 @@
+---
+default_nginx_rp:
+  dehydrated:
+    enabled: False
+    cert_dir: ""

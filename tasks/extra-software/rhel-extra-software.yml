@@ -1,0 +1,10 @@
+---
+- name: Install epel-release
+  become: true
+  ansible.builtin.dnf:
+    name: "epel-release"
+
+- name: Install software
+  become: true
+  ansible.builtin.dnf:
+    name: "{{ pkgs }}"

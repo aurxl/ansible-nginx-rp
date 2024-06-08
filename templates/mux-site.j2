@@ -1,0 +1,48 @@
+# Settings for a TLS enabled server.
+server {
+    listen       443 ssl http2;
+    listen       [::]:443 ssl http2;
+    server_name  {{ nginx_rp.name }};
+    root         /usr/share/nginx/html;
+
+    ssl_certificate "{{ cert_dir }}/{{ nginx_rp.name }}/fullchain.pem";
+    ssl_certificate_key "{{ cert_dir }}/{{ nginx_rp.name }}/privkey.pem";
+    ssl_session_cache shared:SSL:1m;
+    ssl_session_timeout  10m;
+    ssl_ciphers PROFILE=SYSTEM;
+    ssl_prefer_server_ciphers on;
+
+    error_page 404 /404.html;
+        location = /40x.html {
+    }
+
+    error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+    }
+
+    {% for item in nginx_rp.path %}
+    location ~ {{ item.from }}/(.*) {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://{{ item.to }}/$1;
+    }
+
+    {% endfor %}
+
+}
+
+# Dehydrated ACME server.
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name {{ nginx_rp.name }};
+
+    location ^~ /.well-known/acme-challenge {
+        alias /var/www/dehydrated;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}

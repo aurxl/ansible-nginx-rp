@@ -1,0 +1,19 @@
+---
+- name: template domains.txt
+  become: true
+  ansible.builtin.template:
+    src: "domains.txt.j2"
+    dest: "/etc/dehydrated/domains.txt"
+    mode: "u=rw,g=rw,o=r"
+    owner: "root"
+    group: "root"
+
+- name: create /var/www/dehydrated
+  become: true
+  ansible.builtin.file:
+    path: "/var/www/dehydrated"
+    state: directory
+    recurse: true
+    mode: "u=rwx,g=rwx,o=rx"
+    owner: "root"
+    group: "root"

@@ -1,0 +1,14 @@
+---
+- name: create dirs
+  become: true
+  ansible.builtin.file:
+    path: "{{ cert_dir }}/{{ item }}/"
+    state: directory
+    recurse: true
+    mode: "u=rwx,g=rwx,o=rx"
+    owner: "nginx"
+    group: "nginx"
+
+- name: create self signed certs
+  become: true
+  ansible.builtin.command: "openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout {{ cert_dir }}/{{ item }}/privkey.pem -out {{ cert_dir }}/{{ item }}/fullchain.pem -subj '/C=XX/ST=XX/L=XX/O=XX/OU=XX/CN={{ item }}'"

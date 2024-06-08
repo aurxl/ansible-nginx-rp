@@ -1,0 +1,37 @@
+---
+- name: Combine defaults with vars
+  ansible.builtin.set_fact:
+    nginx_rp: "{{ default_nginx_rp | ansible.builtin.combine(nginx_rp, recursive=true) }}"
+
+- name: Set cert dir
+  ansible.builtin.set_fact:
+    cert_dir: "/etc/dehydrated/certs"
+
+- name: Add nginx to pkgs
+  ansible.builtin.set_fact:
+    pkgs: "{{ pkgs + ['nginx'] }}"
+
+- name: Add dehydrated to pkgs
+  ansible.builtin.set_fact:
+    pkgs: "{{ pkgs + ['dehydrated'] }}"
+  when: nginx_rp.dehydrated.enabled
+
+- name: Add mod_ssl to pkgs
+  ansible.builtin.set_fact:
+    pkgs: "{{ pkgs + ['mod_ssl'] }}"
+
+- name: RHEL - Extra software
+  ansible.builtin.include_tasks: extra-software/rhel-extra-software.yml
+  when: ansible_facts["os_family"] == "RedHat"
+
+- name: include self_signed
+  ansible.builtin.include_tasks: self_signed.yml
+  loop: "{{ nginx_rp.dehydrated.domains }}"
+
+- name: include nginx
+  ansible.builtin.include_tasks: nginx.yml
+
+- name: include dehydrated
+  ansible.builtin.include_tasks: dehydrated.yml
+  when: nginx_rp.dehydrated.enabled
+
