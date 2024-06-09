@@ -21,7 +21,7 @@ server {
     }
 
     {% for item in nginx_rp.path %}
-    location ~ {{ item.from }}/(.*) {
+    location ~ {{ item.from }}(.*) {
         {{ item.options | default("") }}
         
         proxy_pass http://{{ item.to }}/$1;
