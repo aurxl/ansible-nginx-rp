@@ -23,7 +23,7 @@ server {
     location / {
         {{ site.options | default("") }}
 
-        proxy_pass http://{{ site.proxy_to }};
+        proxy_pass {{ site.proxy_to }};
     }
 }
 

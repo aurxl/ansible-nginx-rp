@@ -33,15 +33,17 @@ nginx_rp:
   name: mux.foo.fighters
 
   path:
+    - from: ~ /quux(.*)
+      to: http://quux.local/$1
     - from: /foo
-      to: foo.local # FQDN or IP of host to proxy to
+      to: http://foo.local # FQDN or IP of host to proxy to
       options: |    # Optionally define some extra options that will be added to the location 
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
 
   domain:
     - name: foo.bar
-      proxy_to: foo2.local # FQDN or IP of host to proxy to
+      proxy_to: http://foo2.local # FQDN or IP of host to proxy to
       options: |           # Optionally define some extra options that will be added to the location
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;

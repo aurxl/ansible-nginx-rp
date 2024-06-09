@@ -20,11 +20,11 @@ server {
         location = /50x.html {
     }
 
-    {% for item in nginx_rp.path %}
-    location ~ {{ item.from }}(.*) {
+    {% for item in nginx_rp.path +%}
+    location {{ item.from }} {
         {{ item.options | default("") }}
-        
-        proxy_pass http://{{ item.to }}/$1;
+
+        proxy_pass {{ item.to }};
     }
 
     {% endfor %}
