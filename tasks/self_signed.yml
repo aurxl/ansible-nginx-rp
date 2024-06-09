@@ -11,4 +11,5 @@
 
 - name: create self signed certs
   become: true
-  ansible.builtin.command: "openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout {{ cert_dir }}/{{ item }}/privkey.pem -out {{ cert_dir }}/{{ item }}/fullchain.pem -subj '/C=XX/ST=XX/L=XX/O=XX/OU=XX/CN={{ item }}'"
+  ansible.builtin.command: "openssl req -x509 -nodes -days 1 -newkey rsa:2048 -keyout {{ cert_dir }}/{{ item }}/privkey.pem -out {{ cert_dir }}/{{ item }}/fullchain.pem -subj '/C=XX/ST=XX/L=XX/O=XX/OU=XX/CN={{ item }}'"
+  when: nginx_rp.tmp_self_sign

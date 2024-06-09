@@ -21,8 +21,8 @@ server {
     }
 
     location / {
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
+        {{ site.options | default("") }}
+
         proxy_pass http://{{ site.proxy_to }};
     }
 }

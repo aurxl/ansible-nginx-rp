@@ -22,8 +22,8 @@ server {
 
     {% for item in nginx_rp.path %}
     location ~ {{ item.from }}/(.*) {
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
+        {{ item.options | default("") }}
+        
         proxy_pass http://{{ item.to }}/$1;
     }
 
