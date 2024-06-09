@@ -3,10 +3,12 @@
 [![Publish role on Ansible Galaxy](https://github.com/aurxl/ansible-nginx-rp/actions/workflows/push_to_galaxy.yml/badge.svg)](https://github.com/aurxl/ansible-nginx-rp/actions/workflows/push_to_galaxy.yml)
 
 This role will install nginx as a reverse proxy and will let you configure it.
+-  path specific (`https://your.public.domain/foo` -> `http://your.local.machine:8080`)
+- domain specific (`https://www.your.public.domain` -> `http://your.local.machine:8080`)
 
 Supported linux distros are:
-    RHEL based (Fedora, EL, Rocky, ...)
-    (untested) Debian based (Debian, Ubuntu, ...)
+- RHEL based (Fedora, EL, Rocky, ...)
+- (untested) Debian based (Debian, Ubuntu, ...)
 
 #### installation
 ```
