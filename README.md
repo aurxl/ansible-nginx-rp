@@ -5,8 +5,8 @@
 This role will install nginx as a reverse proxy and will let you configure it.
 
 Supported linux distros are:
-    RHEL based (Fedora, EL, Rocky, ...)
-    (untested) Debian based (Debian, Ubuntu, ...)
+- RHEL based (Fedora, EL, Rocky, ...)
+- (untested) Debian based (Debian, Ubuntu, ...)
 
 #### installation
 ```
