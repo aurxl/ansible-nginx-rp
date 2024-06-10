@@ -56,7 +56,7 @@ nginx_rp:
         proxy_set_header Connection "upgrade";
       server_options: |
 
-  certs:
+  ssl:
     dehydrated: true
     cert_dir: ""              # Defaults to /etc/ssl/private and /etc/dehydrated/certs when dehydrated enabled
     domains:
