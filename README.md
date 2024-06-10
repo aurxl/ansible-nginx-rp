@@ -47,6 +47,8 @@ nginx_rp:
 
   domain:
     - name: foo.bar
+      altnames: 
+        - www.foo.bar             # Define altnames, remember to make certificates for them too!
       proxy_to: http://foo2.local # FQDN or IP of host to proxy to
       options: |                  # Optionally define some extra options that will be added to the location
         proxy_http_version 1.1;
