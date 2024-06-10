@@ -1,6 +1,6 @@
 ---
 default_nginx_rp:
   tmp_self_sign: true
-  dehydrated:
-    enabled: False
-    cert_dir: ""
+  ssl:
+    dehydrated: False
+    cert_dir: "/etc/ssl/private"

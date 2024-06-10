@@ -3,9 +3,15 @@
   ansible.builtin.set_fact:
     nginx_rp: "{{ default_nginx_rp | ansible.builtin.combine(nginx_rp, recursive=true) }}"
 
-- name: Set cert dir
+- name: Set cert dir for dehydrated
   ansible.builtin.set_fact:
     cert_dir: "/etc/dehydrated/certs"
+  when: nginx_rp.ssl.dehydrated
+
+- name: Set cert dir
+  ansible.builtin.set_fact:
+    cert_dir: "{{ nginx_rp.ssl.cert_dir }}"
+  when: not nginx_rp.ssl.dehydrated
 
 - name: Add nginx to pkgs
   ansible.builtin.set_fact:
@@ -14,7 +20,7 @@
 - name: Add dehydrated to pkgs
   ansible.builtin.set_fact:
     pkgs: "{{ pkgs + ['dehydrated'] }}"
-  when: nginx_rp.dehydrated.enabled
+  when: nginx_rp.ssl.dehydrated
 
 - name: Add mod_ssl to pkgs
   ansible.builtin.set_fact:
@@ -26,12 +32,12 @@
 
 - name: include self_signed
   ansible.builtin.include_tasks: self_signed.yml
-  loop: "{{ nginx_rp.dehydrated.domains }}"
+  loop: "{{ nginx_rp.ssl.domains }}"
 
 - name: include nginx
   ansible.builtin.include_tasks: nginx.yml
 
 - name: include dehydrated
   ansible.builtin.include_tasks: dehydrated.yml
-  when: nginx_rp.dehydrated.enabled
+  when: nginx_rp.ssl.dehydrated
 
