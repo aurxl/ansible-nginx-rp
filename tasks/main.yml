@@ -32,7 +32,7 @@
 
 - name: include self_signed
   ansible.builtin.include_tasks: self_signed.yml
-  loop: "{{ nginx_rp.ssl.domains }}"
+  loop: "{{ nginx_rp.ssl.domains | dict2items }}"
 
 - name: include nginx
   ansible.builtin.include_tasks: nginx.yml
@@ -40,4 +40,3 @@
 - name: include dehydrated
   ansible.builtin.include_tasks: dehydrated.yml
   when: nginx_rp.ssl.dehydrated
-

@@ -2,14 +2,30 @@
 - name: create dirs
   become: true
   ansible.builtin.file:
-    path: "{{ cert_dir }}/{{ item }}/"
+    path: "{{ cert_dir }}/{{ item.key }}/"
     state: directory
     recurse: true
     mode: "u=rwx,g=rwx,o=rx"
     owner: "nginx"
     group: "nginx"
 
-- name: create self signed certs
+- name: "Check if {{site.key}} certs already present"
   become: true
-  ansible.builtin.command: "openssl req -x509 -nodes -days 1 -newkey rsa:2048 -keyout {{ cert_dir }}/{{ item }}/privkey.pem -out {{ cert_dir }}/{{ item }}/fullchain.pem -subj '/C=XX/ST=XX/L=XX/O=XX/OU=XX/CN={{ item }}'"
-  when: nginx_rp.tmp_self_sign
+  ansible.builtin.stat:
+    path: "{{ cert_dir }}/{{ item.key }}/privkey.pem"
+  register: site_cert_dir
+
+- name: Set altnames
+  ansible.builtin.set_fact:
+    openssl_altnames: "{{ item.value.altnames | map('regex_replace', '^(.*)$', 'DNS: \\1') | list }}"
+  when: item.value.altnames is defined
+
+- name: Set altnames str
+  ansible.builtin.set_fact:
+    subjectAltName_str: "-addext 'subjectAltName = {{ openssl_altnames | join(', ')}}'"
+  when: item.value.altnames is defined
+
+- name: Create self signed certs
+  become: true
+  ansible.builtin.command: "openssl req -x509 -nodes -days 1 -newkey rsa:2048 -keyout {{ cert_dir }}/{{ item.key }}/privkey.pem -out {{ cert_dir }}/{{ item.key }}/fullchain.pem -subj '/C=XX/ST=XX/L=XX/O=XX/OU=XX/CN={{ item.key }}' {{ subjectAltName_str | default('')}}"
+  when: nginx_rp.tmp_self_sign and not site_cert_dir.stat.exists

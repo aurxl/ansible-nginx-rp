@@ -1,1 +1,3 @@
-{{ nginx_rp.ssl.domains | join("\n") }}
+{% for key, value in nginx_rp.ssl.domains.items() %}
+{{ key }} {{ value.altnames | join('') if value.altnames is defined }}
+{% endfor %}
