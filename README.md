@@ -60,6 +60,8 @@ nginx_rp:
     dehydrated: true
     cert_dir: ""              # Defaults to /etc/ssl/private and /etc/dehydrated/certs when dehydrated enabled
     domains:
-      - "foo.bar www.foo.bar" # Define altnames
-      - "mux.foo.fighters"
+      foo.bar:
+        altnames: # Define altnames
+          - www.foo.bar
+      mux.foo.fighters:
 ```
