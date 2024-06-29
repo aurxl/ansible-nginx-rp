@@ -20,7 +20,7 @@ server {
         location = /50x.html {
     }
 
-    {% for item in nginx_rp.path +%}
+    {% for item in nginx_rp.path | default([]) +%}
     location {{ item.from }} {
         {{ item.options | default("") }}
 

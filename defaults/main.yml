@@ -1,6 +1,8 @@
 ---
 default_nginx_rp:
   tmp_self_sign: true
+  path: []
+  domain: []
   ssl:
     dehydrated: False
     cert_dir: "/etc/ssl/private"
