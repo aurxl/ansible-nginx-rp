@@ -58,10 +58,12 @@ nginx_rp:
 
   ssl:
     dehydrated: true
-    cert_dir: ""              # Defaults to /etc/ssl/private and /etc/dehydrated/certs when dehydrated enabled
+    cert_dir: ""  # Defaults to /etc/ssl/private and /etc/dehydrated/certs when dehydrated enabled
     domains:
       foo.bar:
         altnames: # Define altnames
           - www.foo.bar
       mux.foo.fighters:
+    except:
+      - no-le.server.bar # Do not create the dehydrated acme location
 ```

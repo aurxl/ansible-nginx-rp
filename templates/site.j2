@@ -36,9 +36,11 @@ server {
 
     gzip on;
 
+    {% if site.name not in nginx_rp.ssl.except | default([]) %}
     location ^~ /.well-known/acme-challenge {
         alias /var/www/dehydrated;
     }
+    {% endif %}
 
     location / {
         return 301 https://$host$request_uri;
