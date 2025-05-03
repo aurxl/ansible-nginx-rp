@@ -6,12 +6,12 @@
 - name: Set cert dir for dehydrated
   ansible.builtin.set_fact:
     cert_dir: "/etc/dehydrated/certs"
-  when: nginx_rp.ssl.dehydrated
+  when: nginx_rp.ssl.dehydrated.enabled
 
 - name: Set cert dir
   ansible.builtin.set_fact:
     cert_dir: "{{ nginx_rp.ssl.cert_dir }}"
-  when: not nginx_rp.ssl.dehydrated
+  when: not nginx_rp.ssl.dehydrated.enabled
 
 - name: Add nginx to pkgs
   ansible.builtin.set_fact:
@@ -20,7 +20,7 @@
 - name: Add dehydrated to pkgs
   ansible.builtin.set_fact:
     pkgs: "{{ pkgs + ['dehydrated'] }}"
-  when: nginx_rp.ssl.dehydrated
+  when: nginx_rp.ssl.dehydrated.enabled
 
 - name: Add mod_ssl to pkgs
   ansible.builtin.set_fact:
@@ -39,4 +39,4 @@
 
 - name: include dehydrated
   ansible.builtin.include_tasks: dehydrated.yml
-  when: nginx_rp.ssl.dehydrated
+  when: nginx_rp.ssl.dehydrated.enabled

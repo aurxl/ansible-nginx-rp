@@ -17,3 +17,35 @@
     mode: "u=rwx,g=rwx,o=rx"
     owner: "root"
     group: "root"
+
+- name: Register and accept terms
+  become: true
+  ansible.builtin.command:
+    cmd: "/usr/bin/dehydrated --register --accept-terms"
+  when: nginx_rp.ssl.dehydrated.register
+
+- name: Cronjob for autorenew is present
+  become: true
+  ansible.builtin.cron:
+    name: "dehydrated autorenew"
+    state: present
+    hour: "4"
+    minute: "0"
+    job: "dehydrated -c"
+  when: nginx_rp.ssl.dehydrated.autorenew
+
+- name: Cronjob for autorenew is absent
+  become: true
+  ansible.builtin.cron:
+    name: "dehydrated autorenew"
+    state: absent
+  when: not nginx_rp.ssl.dehydrated.autorenew
+
+- name: Renew Certificates
+  ansible.builtin.debug:
+    msg: "Renewal of Certificates will be triggered at the end of the run."
+  when: nginx_rp.ssl.dehydrated.renew
+  changed_when: true
+  notify:
+    - Reload nginx
+    - Renew certificates
