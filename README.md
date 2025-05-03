@@ -16,7 +16,9 @@ ansible-galaxy role install aurxl.nginx_rp
 ```
 
 #### Dehydrated
-No dehydrated commands will be issued using this role. This is up to the admin. I dont want to automatically ban any domain by letsencrypt.
+By default no dehydrated commands will be issued using this role. This is up to the admin. I dont want to automatically ban any domain by letsencrypt.
+To enable auto renewal set `ssl.dehydrated.autorenew` and `ssl.dehydrated.register`. To enable renewal only when the role runs, set `ssl.dehydrated.renew`.
+
 Therefor all preparation is taken, but `sudo dehydrated --register --accept-terms` and `sudo dehydrated -c` must be executed by hand.
 
 #### temporary self signed certificates
@@ -47,7 +49,7 @@ nginx_rp:
 
   domain:
     - name: foo.bar
-      altnames: 
+      altnames:
         - www.foo.bar             # Define altnames, remember to make certificates for them too!
       proxy_to: http://foo2.local # FQDN or IP of host to proxy to
       options: |                  # Optionally define some extra options that will be added to the location
@@ -57,7 +59,11 @@ nginx_rp:
       server_options: |
 
   ssl:
-    dehydrated: true
+    dehydrated:
+      enabled: true
+      register: true
+      renew: true
+      autorenew: true
     cert_dir: ""  # Defaults to /etc/ssl/private and /etc/dehydrated/certs when dehydrated enabled
     domains:
       foo.bar:
