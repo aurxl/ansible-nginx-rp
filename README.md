@@ -57,6 +57,11 @@ nginx_rp:
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
       server_options: |
+      webauth:
+        enabled: True
+        user: foo
+        password: | 
+          strong_passwd4321
 
   ssl:
     dehydrated:

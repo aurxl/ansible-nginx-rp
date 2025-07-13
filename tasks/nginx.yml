@@ -39,15 +39,9 @@
     group: "nginx"
   notify: restart nginx
 
-- name: template domain proxied sites
-  become: true
-  ansible.builtin.template:
-    src: "site.j2"
-    dest: "/etc/nginx/sites-enabled/{{ site.name }}"
-    mode: "u=rw,g=rw,o=r"
-    owner: "nginx"
-    group: "nginx"
-  notify: restart nginx
+- name: Include nginx sites
+  ansible.builtin.include_tasks: nginx-sites.yaml
   loop: "{{ nginx_rp.domain }}"
   loop_control:
     loop_var: site
+

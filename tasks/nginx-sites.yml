@@ -1,0 +1,28 @@
+---
+- name: template domain proxied sites
+  become: true
+  ansible.builtin.template:
+    src: "site.j2"
+    dest: "/etc/nginx/sites-enabled/{{ site.name }}"
+    mode: "u=rw,g=rw,o=r"
+    owner: "nginx"
+    group: "nginx"
+  notify: restart nginx
+
+- name: htpasswd conf
+  become: true
+  ansible.builtin.template:
+    src: htpasswd.j2
+    dest: .htpasswd
+    mode: u=rw,g=,o=
+    owner: nginx
+  notify: restart nginx
+  when: site.htpasswd
+
+- name: adding webaut
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/nginx/.htpasswd
+    create: true
+    line: "{{ site.user }}:{{ site.password | md5 }}"
+
